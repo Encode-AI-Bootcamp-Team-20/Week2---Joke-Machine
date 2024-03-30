@@ -3,8 +3,13 @@
 import { useState } from 'react';
 
 export default function Home() {
+  const [topic, setTopic] = useState<string | null>(null);
+  const [tone, setTone] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
+
+  const [temperature, setTemperature] = useState<number>(50);
+
   const [joke, setJoke] = useState<string | null>(null)
-  const [temperature, setTemperature] = useState<number>(50)
 
   const handleTemperatureChange = (e) => {
     setTemperature(e.target.value)
@@ -22,6 +27,7 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-8">Joke Machine</h1>
      <form onSubmit={handleSubmit} className="space-y-4">
        <div className="flex justify-between gap-4">
+         {/* Topic selector */}
           <div className="text-black flex-grow">
             <label htmlFor="topic" className="block text-sm font-medium text-gray-700">Topic:</label>
             <select id="topic" name="topic" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -33,6 +39,7 @@ export default function Home() {
             </select>
           </div>
 
+          {/* Tone selector */}
           <div className="text-black flex-grow">
             <label htmlFor="tone" className="block text-sm font-medium text-gray-700">Tone:</label>
             <select id="tone" name="tone" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -44,6 +51,7 @@ export default function Home() {
             </select>
           </div>
 
+          {/* Type selector */}
           <div className="text-black flex-grow">
             <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type of Joke:</label>
             <select id="type" name="type" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -55,7 +63,7 @@ export default function Home() {
        </div>
 
 
-        <div class="flex gap-4 items-center">
+        <div className="flex gap-4 items-center">
           <label htmlFor="temperature" className="block text-sm font-medium text-gray-700">Temperature:</label>
           <input
            type="range"
