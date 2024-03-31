@@ -11,9 +11,11 @@ export default function Home() {
 
   const [joke, setJoke] = useState<string | null>(null)
 
+  const [evaluation, setEvaluation] = useState<string | null>(null)
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleTopicChnge = (e) => {
+  const handleTopicChange = (e) => {
     setTopic(e.target.value);
   }
 
@@ -29,12 +31,12 @@ export default function Home() {
     setTemperature(e.target.value);
   }
 
- return (
+  return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Joke Machine</h1>
-     <form className="space-y-4">
-       <div className="flex justify-between gap-4">
-         {/* Topic selector */}
+      <form className="space-y-4">
+        <div className="flex justify-between gap-4">
+          {/* Topic selector */}
           <div className="text-black flex-grow">
             <label htmlFor="topic" className="block text-sm font-medium text-gray-700">Topic:</label>
             <select
@@ -42,7 +44,7 @@ export default function Home() {
               name="topic"
               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               value={topic}
-              onChange={handleTopicChnge}
+              onChange={handleTopicChange}
             >
               <option value="work">Work</option>
               <option value="people">People</option>
@@ -85,41 +87,42 @@ export default function Home() {
               <option value="story">Story</option>
             </select>
           </div>
-       </div>
+        </div>
 
 
         <div className="flex gap-4 items-center">
           <label htmlFor="temperature" className="block text-sm font-medium text-gray-700">Temperature:</label>
           <input
-           type="range"
-           id="temperature"
-           name="temperature"
-           min="0"
-           max="2"
-           step="0.1"
-           className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-           value={temperature}
-           onChange={handleTemperatureChange} />
+            type="range"
+            id="temperature"
+            name="temperature"
+            min="0"
+            max="2"
+            step="0.1"
+            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={temperature}
+            onChange={handleTemperatureChange} />
           <span>{temperature}</span>
         </div>
 
-        <button 
+        <button
           className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           disabled={isLoading}
-          onClick={async (e) =>{
+          onClick={async (e) => {
             e.preventDefault();
             try {
               setIsLoading(true);
               const response = await fetch("api/generate", {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({topic, tone, type, temperature}),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, tone, type, temperature }),
               });
               if (!response.ok) {
                 throw new Error(`${response.status} ${response.statusText}`);
               }
               const data = await response.json();
               setJoke(data.joke);
+              setEvaluation(null);
             } finally {
               setIsLoading(false);
             }
@@ -127,9 +130,41 @@ export default function Home() {
         >
           Generate Joke
         </button>
+
+        {joke && <button
+          className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={isLoading && !joke}
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              setIsLoading(true);
+              const response = await fetch("api/evaluate", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, tone, type, joke }),
+              });
+              if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`);
+              }
+              const data = await response.json();
+              setEvaluation(data.evaluation);
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        >
+          Evaluate Joke
+        </button>}
       </form>
       {isLoading && <p className="mt-4 text-lg text-blue-700">Loading<span className="animate-bounce">...</span></p>}
       {joke && !isLoading && <p className="mt-4 text-lg text-gray-700">{joke}</p>}
+
+      {evaluation && !isLoading &&
+        <div className="rounded shadow p-4">
+          Evaluation:
+          <pre className="overflow-x-auto"><code className="json">{evaluation}</code></pre>
+        </div>
+      }
     </div>
- );
+  );
 }
