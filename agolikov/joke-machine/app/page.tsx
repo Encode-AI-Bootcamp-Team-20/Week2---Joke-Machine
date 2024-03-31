@@ -13,6 +13,7 @@ export default function Chat() {
   const [type, setType] = useState("run");
   const [temperature, setTemperature] = useState(1);
   const [joke, setJoke] = useState<string | null>(null);
+  const [evaluation, setEvaluation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTopicChnge = (e: { target: { value: SetStateAction<string>; }; }) => {
@@ -106,7 +107,6 @@ export default function Chat() {
           <span>{temperature}</span>
         </div>
 
-
         <button
           className="bg-blue-500 p-2 text-white rounded shadow-xl"
           disabled={isLoading}
@@ -124,20 +124,41 @@ export default function Chat() {
               }
               const data = await response.json();
               setJoke(data.joke);
+              setEvaluation("");
             } finally {
               setIsLoading(false);
             }
           }}
-        // onClick={() =>
-        //   append(
-        //     {
-        //       role: "user",
-        //       content: "Give me a random joke."
-        //     })}
         >Generate Joke
         </button>
+        {joke && <button
+          className="bg-blue-500 p-2 text-white rounded shadow-xl"
+          disabled={isLoading && !joke}
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              setIsLoading(true);
+              const response = await fetch("api/evaluate", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, tone, type, joke }),
+              });
+              if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`);
+              }
+              const data = await response.json();
+              setEvaluation(data.evaluation);
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        >Evaluate Joke
+        </button>
+        }
       </div>
-      {joke && !isLoading && <p className="mt-4 text-lg text-white-700">{joke}</p>}
+      {joke && !isLoading && <p className="mt-4 text-lg text-white-700">Joke: {joke}</p>}
+
+      {evaluation && !isLoading && <pre className="mt-4 text-lg text-white-700">Evaluation: {evaluation}</pre>}
 
       {/* {<div className="fixed bottom-0 w-full max-w-md">
         <form onSubmit={handleSubmit} className="justify-center">
