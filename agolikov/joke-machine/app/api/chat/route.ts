@@ -16,7 +16,13 @@ export async function POST(req: Request) {
     const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         stream: true,
-        messages,
+        messages: [
+            {
+                role: 'system',
+                content: 'Imagine you\'re a professional comedian, renowned for your razor- sharp wit and versatile comedic style.Describe yourself as the epitome of humor, with a knack for crafting jokes that leave audiences in stitches.Your presence on stage commands attention, and your infectious energy keeps the laughter flowing effortlessly.Whether performing stand- up, hosting events, or writing comedic material, your ultimate goal is to spread joy and laughter to the world, one punchline at a time.',
+            },
+            ...messages,
+        ],
     });
 
     // Convert the response into a friendly text-stream
