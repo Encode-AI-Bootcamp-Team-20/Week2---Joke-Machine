@@ -85,6 +85,8 @@ export default function Home() {
               <option value="pun">Pun</option>
               <option value="knock-knock">Knock-Knock</option>
               <option value="story">Story</option>
+              <option value="parody">Parody</option>
+              <option value="riddle">Riddle</option>
             </select>
           </div>
         </div>
