@@ -11,10 +11,6 @@ export default function Home() {
 
   const [joke, setJoke] = useState<string | null>(null)
 
-  const handleTemperatureChange = (e) => {
-    setTemperature(e.target.value)
-  }
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // generate joke?
@@ -30,7 +26,7 @@ export default function Home() {
          {/* Topic selector */}
           <div className="text-black flex-grow">
             <label htmlFor="topic" className="block text-sm font-medium text-gray-700">Topic:</label>
-            <select id="topic" name="topic" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <select id="topic" name="topic" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={(e) => setTopic(e.target.value)}>
               <option value="work">Work</option>
               <option value="people">People</option>
               <option value="animals">Animals</option>
@@ -42,7 +38,7 @@ export default function Home() {
           {/* Tone selector */}
           <div className="text-black flex-grow">
             <label htmlFor="tone" className="block text-sm font-medium text-gray-700">Tone:</label>
-            <select id="tone" name="tone" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+           <select id="tone" name="tone" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={(e) => setTone(e.target.value)}>
               <option value="witty">Witty</option>
               <option value="sarcastic">Sarcastic</option>
               <option value="silly">Silly</option>
@@ -54,7 +50,7 @@ export default function Home() {
           {/* Type selector */}
           <div className="text-black flex-grow">
             <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type of Joke:</label>
-            <select id="type" name="type" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <select id="type" name="type" className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={(e) => setType(e.target.value)}>
               <option value="pun">Pun</option>
               <option value="knock-knock">Knock-Knock</option>
               <option value="story">Story</option>
@@ -73,7 +69,7 @@ export default function Home() {
            max="100"
            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
            value={temperature}
-           onChange={handleTemperatureChange} />
+           onChange={(e) => setTemperature(Number(e.target.value))} />
           <span>{temperature}</span>
         </div>
 
